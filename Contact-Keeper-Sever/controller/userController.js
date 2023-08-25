@@ -8,29 +8,43 @@ const userRegister = asyncModel(async (req, res) => {
   const userFind = await userModel.findOne({
     email: req.body.email,
   });
-
-  if (userFind) {
+  const nameFind = await userModel.findOne({
+    name: req.body.name,
+  });
+  if(userFind && nameFind){
+    res.status(400);
+    throw new Error("name va email da ton tai!");
+  }else if (userFind) {
     res.status(400);
     throw new Error("email da ton tai!");
+  }else if(nameFind){
+    res.status(400);
+    throw new Error("name da ton tai!");
   } else {
-    const newUser = new userModel({
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password,
-    });
-
-    const userInsert = await userModel.create(newUser);
-
-    if (userInsert) {
-      res.status(200).json({
-        _id: newUser.id,
-        name: newUser.name,
-        email: newUser.email,
-        // token: jwt.sign({ _id: newUser.id }, "masobimat"),
+    try {
+      
+      const newUser = new userModel({
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
       });
-    } else {
+  
+      const userInsert = await userModel.create(newUser);
+  
+      if (userInsert) {
+        res.status(200).json({
+          _id: newUser.id,
+          name: newUser.name,
+          email: newUser.email,
+          // token: jwt.sign({ _id: newUser.id }, "masobimat"),
+        });
+      } else {
+        res.status(400);
+        throw new Error("dang ki that bai!");
+      }
+    } catch (error) {
       res.status(400);
-      throw new Error("dang ki that bai!");
+        throw new Error("dang ki that bai!");
     }
   }
 });
@@ -87,42 +101,62 @@ const userPull = asyncModel(async (req, res) => {
 
 // });
 const updateUserProfile = asyncModel(async (req, res) => {
-  try {
+  
     //   const contactsUpdate = await contactModel.find({
     //     user: req.user.name
     // })
-    console.log("a");
+    
     const user = await userModel.findOne({
       _id: req.body._id,
     });
 
-    if (!req.body.passworNow) {
-      user.name = req.body.name;
-      user.email = req.body.email;
-    } else if (
-      req.body.passworNow &&
-      (await bcrypt.compare(req.body.passworNow, user.password))
-    ) {
-      user.name = req.body.name;
-      user.email = req.body.email;
-      user.password = req.body.passwordNew;
-      // console.log(user);
-    } else {
+    const nameRepeat = await userModel.findOne({
+      name: req.body.name
+    })
+    const emailRepeat = await userModel.findOne({
+      email: req.body.email
+    })
+    // console.log(!!(nameRepeat) && (user.name !== nameRepeat.name) && !!(nameRepeat.name) );
+
+    if(!!(nameRepeat) && (user.name !== nameRepeat.name) && !!(nameRepeat.name)){
       res.status(401);
-      throw new Error("mat khau hien tai khong dung!");
-    }
-
-    await user.save();
-
-    const userUpdate = await userModel
-      .findById({ _id: req.user.id })
-      .select("-password");
-    res.json(userUpdate);
-  } catch (e) {
-    console.log(e);
-    res.status(401);
-    throw new Error("khong the cap nhat!");
-  }
+      throw new Error("name da ton tai!");
+    }else if(!!(emailRepeat) && (user.email !== emailRepeat.email) && !!(emailRepeat.email)){
+      console.log("a");
+      res.status(401);
+      throw new Error("email da ton tai!");
+    }else{
+      try {
+        if (!req.body.passworNow) {
+          console.log("b");
+          user.name = req.body.name;
+          user.email = req.body.email;
+        } else if (
+          req.body.passworNow &&
+          (await bcrypt.compare(req.body.passworNow, user.password))
+        ) {
+          console.log("c");
+          user.name = req.body.name;
+          user.email = req.body.email;
+          user.password = req.body.passwordNew;
+          // console.log(user);
+        } else {
+          res.status(401);
+          throw new Error("mat khau hien tai khong dung!");
+        }
+    
+        await user.save();
+    
+        const userUpdate = await userModel
+          .findById({ _id: req.user.id })
+          .select("-password");
+        res.json(userUpdate);
+      } catch (e) {
+        console.log(e);
+        res.status(401);
+          throw new Error("mat khau hien tai khong dung!");
+      }
+    } 
 });
 
 const deleteUser = asyncModel(async (req, res) => {

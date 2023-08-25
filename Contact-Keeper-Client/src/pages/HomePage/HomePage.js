@@ -10,6 +10,8 @@ import ContactService from "../../services/contactServices";
 import authContext from "../../contexts/AuthContext/authContext";
 import Modal from "../../components/Modal/Modal";
 import Footer from "../../layouts/Footer/Footer";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // const contactData = [
 //   {
 //     id: 1,
@@ -55,8 +57,9 @@ const HomePage = () => {
   const toggleModal = () => {
     setModal(!modal);
   };
-
+  
   const [showForm, setShowForm] = useState(false);
+  const [contactForm, setContactForm] = useState(initialValues);
 
   
   const { tokenize, state } = useContext(authContext);
@@ -76,7 +79,6 @@ const HomePage = () => {
     } catch (err) {}
   };
 
-  const [contactForm, setContactForm] = useState(initialValues);
   useEffect(() => {
     if (!state.user) {
       tokenize();
@@ -90,60 +92,86 @@ const HomePage = () => {
       // await axiosInstance.delete(`/contact/${id}`)
       await ContactService.delete(id)
       .then(res => {
-        alert("Xoa thanh cong!");
+        toast.success('Delete contact successfully!', {
+          position: toast.POSITION.TOP_CENTER
+      });
         setShow(pre => !pre);
-      }).catch(err => alert("Xoa khong thanh cong!"));
+      }).catch(err => toast.error('contact delete failed!', {
+        position: toast.POSITION.TOP_CENTER
+    }));
     }
     // setContacts(contacts.filter((item) => item.id !== id));
   };
   const onAddContact = async (contact) => {
+    console.log(contacts);
     const index = contacts.find((item) => item._id === contact._id);
     if (index) {
       // const newContact = [...contacts];
       // newContact.splice(index, 1, contact);
       // setContacts(newContact);
       // await axiosInstance.put(`/contact/${index._id}`, contact)
-      await ContactService.update(index._id,contact)
-      .then(res => {
-        alert("Cap nhat thanh cong!");
-        setShow(pre => !pre);
-      }).catch(err => alert("Cap nhat khong thanh cong!"));
+      if(contact.name && contact.phone && contact.email && contact.type){
+        await ContactService.update(index._id,contact)
+        .then(res => {
+          toast.success('Update successful!', {
+            position: toast.POSITION.TOP_RIGHT
+        });
+          setShow(pre => !pre);
+        }).catch(err => {
+          setContactForm(infCard)
+          toast.error(err.response.data.message, {
+          position: toast.POSITION.TOP_RIGHT
+      })
+    });
+      }
     } else {
       // setContacts((prev) => [
       //   ...prev,
       //   { ...contact, id: new Date().toDateString() },
       // ]);
       // await axiosInstance.post("/contact", contact)
-      await ContactService.create(contact)
-      .then(res =>{
-        alert("Them thong tin thanh cong!");
-        setShow(pre => !pre);
-      }).catch(err => alert("Them thong tin khong thanh cong"));
+      if(contact.name && contact.phone && contact.email && contact.type){
+        await ContactService.create(contact)
+        .then(res =>{
+          toast.success('More success information!', {
+            position: toast.POSITION.TOP_RIGHT
+        });
+          setShow(pre => !pre);
+        }).catch(err => toast.error(err.response.data.message, {
+          position: toast.POSITION.TOP_RIGHT
+      }));
+      }
     }
   };
   const validate = (values) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     if (!values.name) {
-      alert("Name is required!");
-      return
+      toast.error('Name is required!', {
+        position: toast.POSITION.TOP_RIGHT
+    });
     }
     if (!values.email) {
-      alert("Email is required!");
-      return
+      toast.error('Email is required!', {
+        position: toast.POSITION.TOP_RIGHT
+    });
     } else if (!regex.test(values.email)) {
-      alert("This is not a valid email format!");
-      return
+      toast.error('This is not a valid email format!', {
+        position: toast.POSITION.TOP_RIGHT
+    });
     }
     if (!values.phone) {
-      alert("Phone is required");
-      return
+      toast.error('Phone is required!', {
+        position: toast.POSITION.TOP_RIGHT
+    });
     }
     return values;
   };
   return (
     
-    <div className="h-[100vh] bg-" >
+    <div className="h-[100vh] bg-neutral-50 " >
+    <div className="row-span-2">
       <Header />
+    </div>
       <div className="container p-4  h-[75vh] ">
         <ContactContext.Provider
           value={{
@@ -157,7 +185,7 @@ const HomePage = () => {
             infCard
           }}
         >
-        <div className="">
+        <div className="pt-5">
           <div className="row flex justify-center">
           {
             showForm && (
@@ -173,7 +201,7 @@ const HomePage = () => {
           }
           {
             !showForm && (
-              <div className="col-12 col-md-6">
+              <div className="col-12 col-md-7">
               <ContactList
                 setShow ={setShow} 
                 setQuery = {setQuery} 
@@ -195,6 +223,7 @@ const HomePage = () => {
 
       <Footer ></Footer>
       </div>
+      <ToastContainer></ToastContainer>
     </div>
   );
 };

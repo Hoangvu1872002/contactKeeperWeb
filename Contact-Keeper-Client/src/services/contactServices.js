@@ -5,7 +5,7 @@ const ContactService = {
   delete: (id) => axiosInstance.delete(`/contact/deleteContact/${id}`),
   update: (id, contact) => axiosInstance.put(`/contact/updateContact/${id}`, contact),
   create: (contact) => axiosInstance.post("/contact", contact),
-  updateManyContact: (values) => axiosInstance.put("contact/updateManyContact",values),
+  updateManyContact: (values, userKey) => axiosInstance.put(`contact/updateManyContact/${userKey}`,values),
   deleteManyContact: () => axiosInstance.delete("contact/deleteManyContact"),
 };
 

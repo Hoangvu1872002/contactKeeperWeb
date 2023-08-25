@@ -18,7 +18,7 @@ contactRouter.delete("/deleteContact/:id", protect, deleteContactByID);
 
 contactRouter.put("/updateContact/:id", protect, updateContact);
 
-contactRouter.put("/updateManyContact", protect, updateManyContact);
+contactRouter.put("/updateManyContact/:userKey", protect, updateManyContact);
 
 contactRouter.delete("/deleteManyContact", protect, deleteManyContact);
 

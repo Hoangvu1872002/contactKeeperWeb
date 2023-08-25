@@ -13,25 +13,30 @@ const Header = (props) => {
   // console.log(state);
   
   return (
-    <header className="h-[10vh]" >
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <header className="h-[10vh] " >
+      <nav className="navbar navbar-expand-lg navbar-light bg-neutral-300  ">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
           Contact Keeper
           </Link>
           
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0   ">
-              <li className="nav-item ">
-                <Link className="nav-link active text-dark" aria-current="page" to="/">
+          <div className="navbar-nav me-auto mb-2 mb-lg-0   ">
+              <span className=" ">
+                <Link className="nav-link " to="/">
                   Home
                 </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/Home">
+              </span>
+              <span className="nav-item">
+                <Link className="nav-link" to="/profileForm">
+                  Profile
+                </Link>
+              </span>
+              <span className="nav-item">
+                <Link className="nav-link" to="/home">
                   About
                 </Link>
-              </li>
-            </ul>
+              </span>
+            </div>
             { 
               state.user && state.user.name ? (
                 <LogoutPage></LogoutPage>

@@ -16,20 +16,20 @@ const contactModel = require("../model/contactModel");
 // });
 const getContact = asyncHandler(async (req, res) => {
   try {
-    const pageSize = 4;
+    const pageSize = 6;
     const page = Number(req.query.pageNumber) || 1;
     const keyword = req.query.keyword;
     const searchQuery = keyword
       ? { name: { $regex: keyword }, user: req.user.name }
       : { user: req.user.name };
 
-    console.log("a");
-    console.log(searchQuery);
+    // console.log("a");
+    // console.log(searchQuery);
 
     const totalcontact = await contactModel.countDocuments(searchQuery);
-    console.log("b");
+    // console.log("b");
     const numberPage = Math.ceil(totalcontact / pageSize);
-    console.log("c");
+    // console.log("c");
     console.log(totalcontact);
     const contacts = await contactModel
       .find(searchQuery)
@@ -50,8 +50,19 @@ const createContact = asyncHandler(async (req, res) => {
   const ContactFind = await contactModel.findOne({
     email: req.body.email,
   });
-
-  if (ContactFind) {
+  const nameFind = await contactModel.findOne({
+    name: req.body.name,
+  })
+  const phoneFind = await contactModel.findOne({
+    phone: req.body.phone,
+  })
+  if(nameFind){
+    res.status(400);
+    throw new Error("name da ton tai!");
+  }else if(phoneFind){
+    res.status(400);
+    throw new Error("phone da ton tai!");
+  }else if (ContactFind) {
     res.status(400);
     throw new Error("email da ton tai!");
   } else {
@@ -103,7 +114,26 @@ const updateContact = asyncHandler(async (req, res) => {
     const contactUpdate = await contactModel.findOne({
       _id: req.params.id,
     });
-    if (contactUpdate) {
+    const nameUpdate = await contactModel.findOne({
+      name: req.body.name,
+    });
+    const emailUpdate = await contactModel.findOne({
+      email: req.body.email,
+    });
+    const phoneUpdate = await contactModel.findOne({
+      phone: req.body.phone,
+    });
+     
+    if(!!nameUpdate && contactUpdate.name !== nameUpdate.name){
+      res.status(401);
+      throw new Error("name da ton tai!");
+    }else if(!!emailUpdate && contactUpdate.email !== emailUpdate.email){
+      res.status(401);
+      throw new Error("email da ton tai!");
+    }else if(!!phoneUpdate && contactUpdate.phone !== nameUpdate.phone){
+      res.status(401);
+      throw new Error("phone da ton tai!");
+    }else if (contactUpdate) {
       try {
         // console.log(req.body);
         (contactUpdate.user = req.user.name),
@@ -124,21 +154,23 @@ const updateContact = asyncHandler(async (req, res) => {
     }
   } else {
     res.status(401);
-    throw new Error("Khong tim thay idd!");
+    throw new Error("id khong chuan!");
   }
 });
 
 const updateManyContact = asyncHandler(async (req, res) => {
+  console.log(req.params.userKey);
   
   try {
+    console.log("ab");
     // console.log(req.user.name);
     // console.log(req.body.name);
   
     // console.log("a");
     
-        await contactModel.updateMany({"user": req.user.name}, {"$set": {"user": req.body.name}});
+        await contactModel.updateMany({"user": req.params.userKey}, {"$set": {"user": req.body.name}});
           
-          console.log("a");
+          
           const contactsUpdate = await contactModel.find({
             user: req.body.name,
           });

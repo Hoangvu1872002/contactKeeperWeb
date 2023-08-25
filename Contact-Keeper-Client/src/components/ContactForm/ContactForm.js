@@ -19,9 +19,9 @@ const ContactForm = (props) => {
     event.preventDefault()
     onAddContact(ctxContact.validate(contactForm) );
     setContactForm(initialValues);
-    setTimeout(()=> {
-      props.setShowForm((pre) => !pre);
-    }, 1000)
+    // setTimeout(()=> {
+    //   props.setShowForm((pre) => !pre);
+    // }, 1000)
     
   }
   const handleShowContactForm = () =>{
@@ -33,8 +33,8 @@ const ContactForm = (props) => {
 
   return (
     <div className="contact-form-container">
-      <h4 className="text-center">Contact Form</h4>
-      <form onSubmit={onSubmitHandler} action="POST">
+      <h4 className="flex justify-center font-bold text-lg">Contact Form</h4>
+      <form className='mt-10' onSubmit={onSubmitHandler} action="POST">
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
             Fullname:
@@ -111,15 +111,15 @@ const ContactForm = (props) => {
 
         <button
           type="submit"
-          className="btn btn-primary w-100 text-dark border border-dark cursor-pointer"
+          className="btn hover:bg-slate-300 w-100 text-dark border-1 border-solid border-emerald-600 cursor-pointer mr-5"
          disabled={isDisabledSubmitButton}
         >
           Submit
         </button>
-        <span className='showContactForm bg-slate-300'
+        <button className='showContactForm bg-slate-300 hover:bg-slate-400 w-20 rounded-lg border-solid border-1 border-red-400' 
       onClick={handleShowContactForm}>
-        <button className='w-20'>Exit</button>
-      </span>
+        Exit
+      </button>
         </div>
       </form>
     </div>
