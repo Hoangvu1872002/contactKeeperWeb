@@ -19,16 +19,16 @@ const ContactCard = ({ card, handleShowContactForm }) => {
   return (
     <>
     {/* <Modal modal ={modal} toggleModal = {toggleModal}></Modal> */}
-    <div className="content rounded-lg grid grid-flow-row-dense grid-cols-5">
+    <div className="content w-96 rounded-lg grid grid-flow-row-dense grid-cols-12">
     
-      <div className="info col-span-3">
+      <div className="info col-span-7">
         <span className="card bg-gray-400 ">{card.name}</span>
         {/* <p className='type'>{card.type}</p> */}
       </div>
       {/* <p className="email">Email: {card.email}</p> 
       <p className="phone">Phone: {card.phone}</p>
       <p className='user'>Added by user: {card.user}</p> */}
-      <div className="gr-button flex items-center col-span-2">
+      <div className="gr-button flex items-center col-span-5">
         <button
           className="edit-button rounded-lg bg-slate-300 hover:bg-gray-400 border-neutral-300 border-solid border-2"
           onClick={handleCard}

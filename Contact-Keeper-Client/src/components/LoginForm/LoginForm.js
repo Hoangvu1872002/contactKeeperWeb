@@ -47,7 +47,7 @@ const LoginForm = (props) => {
   };
 
   return (
-    <div className="mt-[5%]">
+    <div className="mt-[8%]">
       <div className="w-full max-w-[500px] mx-auto bg-white shadow-lg p-5 mb-10">
         <form onSubmit={handleLogin}>
         <div className="text-xl  flex items-center justify-center font-bold text-zinc-400 mb-4 mt-[-20px]">LOGIN</div>

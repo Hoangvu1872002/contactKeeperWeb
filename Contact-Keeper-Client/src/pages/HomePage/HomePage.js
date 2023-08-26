@@ -172,7 +172,7 @@ const HomePage = () => {
     <div className="row-span-2">
       <Header />
     </div>
-      <div className="container p-4  h-[75vh] ">
+      <div className="container p-2  h-[75vh] ">
         <ContactContext.Provider
           value={{
             contacts,
@@ -201,7 +201,7 @@ const HomePage = () => {
           }
           {
             !showForm && (
-              <div className="col-12 col-md-7">
+              <div className="col-12 col-md-12">
               <ContactList
                 setShow ={setShow} 
                 setQuery = {setQuery} 
