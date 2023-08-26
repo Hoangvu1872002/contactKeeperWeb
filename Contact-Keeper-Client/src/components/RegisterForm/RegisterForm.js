@@ -75,7 +75,7 @@ const RegisterForm = (props) => {
     });
   };
   return (
-    <div className="mt-[10%]">
+    <div className="mt-[5%]">
       <div className="w-full max-w-[500px] mx-auto bg-white shadow-lg p-5 mb-10">
         <form onSubmit={handleRegister}>
         <div className="text-xl  flex items-center justify-center font-bold text-zinc-400 mb-4 mt-[-20px]">REGISTER</div>
