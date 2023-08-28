@@ -130,7 +130,7 @@ const updateContact = asyncHandler(async (req, res) => {
     }else if(!!emailUpdate && contactUpdate.email !== emailUpdate.email){
       res.status(401);
       throw new Error("email da ton tai!");
-    }else if(!!phoneUpdate && contactUpdate.phone !== nameUpdate.phone){
+    }else if(!!phoneUpdate && contactUpdate.phone !== phoneUpdate.phone){
       res.status(401);
       throw new Error("phone da ton tai!");
     }else if (contactUpdate) {
